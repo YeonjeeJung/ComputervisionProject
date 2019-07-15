@@ -208,6 +208,11 @@ cameraParams = cameraParameters('IntrinsicMatrix', K', ...
 
 reprojected_errors = zeros(size(imagePoints));
 
+cam = estimateCameraParameters(imagePoints, worldPoints);
+tmp = reshape(x0(6:41),[,])
+rvecs
+cam.RotationVectors
+
 % Uncomment this line after you implement this function to calculate
 % reprojection errors of your camera parameters.
 reprojected_errors = imagePoints - cameraParams.ReprojectedPoints;
