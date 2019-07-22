@@ -34,7 +34,7 @@ cameraParameters2 = estimateSingleCameraParameters(imagePoints(:, :, :, 2), boar
 stereoParams = stereoParameters(cameraParameters1, cameraParameters2, R, t);
 
 %% Evaluate rectification
-figure; showReprojectionErrors(stereoParams);
+% figure; showReprojectionErrors(stereoParams);
 
 for i=1:2
     fprintf('Evaluation [%02d]\n', i);

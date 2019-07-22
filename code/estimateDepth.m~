@@ -23,7 +23,9 @@ disparityMap = zeros(size(leftImageGray));
 depthMap = zeros(size(leftImageGray));
 % ----- Your code here (10) -----
 
-windowSize = 11;
+filename = 'window5disparity.mat';
+
+windowSize = 5;
 minDisparity = 51;
 maxDisparity = 100;
 costVolume = -ones(size(leftImageGray,1),size(leftImageGray,2),maxDisparity-minDisparity)*windowSize*windowSize;
@@ -40,7 +42,12 @@ for d=minDisparity:maxDisparity
             costVolume(y+(windowSize-1)/2,x+(windowSize-1)/2,d-minDisparity+1) = dot(left,right)/(sqrt(norm(left))*sqrt(norm(right)));
         end
     end
+    d
 end
+
+save(filename);
+
+% load(filename);
 
 for d=minDisparity:maxDisparity
 %     costVolume(:,:,d) = imguidedfilter(costVolume(:,:,d),leftImageGray);
@@ -49,9 +56,15 @@ end
 
 for y=1:size(leftImageGray,1)
     for x=1:size(rightImageGray,2)
-        [maxval, maxidx] = max(costVolume(y,x,:));
+        [maxval, maxidx] = max(costVolume(y,x,minDisparity-3:end));
         disparityMap(y,x) = maxidx+minDisparity-1;
     end
 end
 
+disparityMap
+figure; imshow(mat2gray(disparityMap));
 depthMap = (focalLength*baseline*ones(size(disparityMap)))./disparityMap;
+
+figure; imshow(mat2gray(depthMap));
+
+fprintf("hi\n");
