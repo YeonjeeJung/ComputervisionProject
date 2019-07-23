@@ -23,33 +23,33 @@ disparityMap = zeros(size(leftImageGray));
 depthMap = zeros(size(leftImageGray));
 % ----- Your code here (10) -----
 
-windowSize = 11;
-minDisparity = 51;
-maxDisparity = 100;
-costVolume = -ones(size(leftImageGray,1),size(leftImageGray,2),maxDisparity-minDisparity)*windowSize*windowSize;
+windowSize = 15;
+minDisparity = 11;
+maxDisparity = 140;
+costVolume = zeros(size(leftImageGray,1),size(leftImageGray,2),maxDisparity);
 
 for d=minDisparity:maxDisparity
     for y=1:size(leftImageGray,1)-windowSize
         for x=1+d:size(leftImageGray,2)-windowSize
-            left = reshape(leftImageGray(y:y+windowSize-1,x:x+windowSize-1),windowSize*windowSize,1);
-            right = reshape(rightImageGray(y:y+windowSize-1,x-d:x-d+windowSize-1),windowSize*windowSize,1);
+            left = reshape(leftImageGray(y:y+windowSize-1,x:x+windowSize-1),[],1);
+            right = reshape(rightImageGray(y:y+windowSize-1,x-d:x-d+windowSize-1),[],1);
             
             left = left-mean(left);
             right = right-mean(right);
             
-            costVolume(y+(windowSize-1)/2,x+(windowSize-1)/2,d-minDisparity+1) = dot(left,right)/(sqrt(norm(left))*sqrt(norm(right)));
+            costVolume(y+(windowSize-1)/2,x+(windowSize-1)/2,d) = dot(left,right)/(sqrt(norm(left))*sqrt(norm(right)));
         end
     end
 end
 
 for d=minDisparity:maxDisparity
-%     costVolume(:,:,d) = imguidedfilter(costVolume(:,:,d),leftImageGray);
-    costVolume(:,:,d-minDisparity+1) = imgaussfilt(costVolume(:,:,d-minDisparity+1),5);
+    costVolume(:,:,d) = imguidedfilter(costVolume(:,:,d),leftImageGray);
+%     costVolume(:,:,d) = imgaussfilt(costVolume(:,:,d),1);
 end
 
 for y=1:size(leftImageGray,1)
-    for x=1:size(rightImageGray,2)
-        [maxval, maxidx] = max(costVolume(y,x,:));
+    for x=1:size(leftImageGray,2)
+        [maxval, maxidx] = max(costVolume(y,x,minDisparity:maxDisparity));
         disparityMap(y,x) = maxidx+minDisparity-1;
     end
 end
