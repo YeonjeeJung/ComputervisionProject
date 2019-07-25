@@ -1,3 +1,7 @@
+---
+html header: <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+---
+
 # Computer Vision Project
 
 이 프로젝트는 Camera Calibration과 Disparity Map, Depth Map을 생성하는 프로젝트이다.
